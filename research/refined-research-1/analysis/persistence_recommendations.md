@@ -6,6 +6,14 @@
 
 _Reference_: Additional comparative notes on Claude Code and Gemini CLI live in `../preliminary` but are not primary drivers for this refined phase.
 
+## Existing Codex Persistence Patterns (Research Notes)
+- **Rollout persistence policy** only records `ResponseItem`s and selected `EventMsg`s; plan updates are explicitly filtered out (`sources/codex/codex-rs/core/src/rollout/policy.rs:1`). This explains why the built-in plan tool never survives a restart.
+- **Conversation bootstrap** replays raw rollout items via `RolloutRecorder::get_rollout_history` and `ConversationManager::resume_conversation_from_rollout`, but no post-processing bridges the replayed transcript into actionable next steps (`sources/codex/codex-rs/core/src/rollout/recorder.rs:199` · `sources/codex/codex-rs/core/src/conversation_manager.rs:101`).
+- **Message history** appends to `history.jsonl` through `message_history::append_entry`, yet the documented `history.max_bytes` limit is currently a stub (`sources/codex/codex-rs/core/src/message_history.rs:3` · `sources/codex/docs/config.md:683`).
+- **Project docs** (`AGENTS.md`, fallbacks) are merged once per session and remain static for the duration of that session (`sources/codex/codex-rs/core/src/project_doc.rs:34`).
+
+These observations reinforce that Codex already centralises session data, but lacks higher-level orchestration linking those artefacts to project intent.
+
 ## User-Proposed Approaches
 
 ### A. Layered Cache (Long-Term + Short-Term)
@@ -60,6 +68,49 @@ _Reference_: Additional comparative notes on Claude Code and Gemini CLI live in 
 - **Pros**: Human-readable audit trail; easy to review or share; leverages git history.
 - **Cons**: Needs automation to avoid manual burden; may duplicate cache data if not summarised carefully.
 - **Integration**: Simple optional add-on; could write to `docs/ai-journal/YYYY-MM-DD.md`.
+
+## Layered Cache Rationale vs. Alternatives
+- **Direct leverage of existing signals**: rollouts already include `SessionMetaLine` with git info and each turn’s diff data, so layering a cache requires no new protocol messages—just post-turn hooks that summarise state (`sources/codex/codex-rs/core/src/rollout/recorder.rs:223`).
+- **Low-friction UX**: Unlike agent orchestration (which introduces new concurrency paths) or vector stores (which need external services), the layered cache remains file-based and git-friendly, making it easy to inspect, version, and review.
+- **Incremental rollout**: The approach can start in “shadow mode”—writing cache artefacts while leaving behaviour unchanged—before powering new commands like `codex tasks`. Agent orchestration is harder to stage because it alters execution flow.
+- **Extensibility**: Cache design does not preclude adding agents or embeddings later; it simply provides the backbone those modules can read/write against.
+
+## Implementation & Technical Considerations
+- **Hook points**
+  - Append to the short cache after each successful turn in `Session::spawn_task` or the post-task completion path so we capture model output, approvals, diff summaries, and current git HEAD.
+  - Consolidate into the long cache during session shutdown (or when detecting a commit) by comparing current `project_state.json` to new deltas.
+- **Conflict handling**
+  - Store branch + commit hash in both caches; on session start compare with repository state. When drift is detected, prompt to fork cache entries (per branch) or to reconcile manually.
+  - Use monotonic entry IDs or append-only logs in `project_state.json` so merges behave predictably under git.
+- **Schema sketch**
+  ```json
+  {
+    "version": 1,
+    "project": {
+      "goals": [...],
+      "milestones": [...],
+      "task_graph": {...},
+      "git": {
+        "branch": "main",
+        "head": "abc123",
+        "dirty": false
+      }
+    }
+  }
+  ```
+  Short cache files mirror the schema but scoped to a single turn/session with runtime metadata.
+- **Integration with plan tool**
+  - Extend the `update_plan` handler to optionally persist plan items into the cache. Since plan events are currently dropped by the rollout policy, persisting via cache avoids changing the recorder.
+  - Surface new CLI commands (`codex plan show`, `codex plan adopt`) that read directly from `project_state.json`.
+- **Testing**
+  - Unit tests against `RolloutRecorder` to ensure cache writers do not block the async channel.
+  - Integration tests that resume sessions across branch switches to verify drift detection and reconciliation prompts.
+
+## Performance & UX Implications
+- **IO overhead**: Rollout writing already runs on a dedicated Tokio task (`mpsc::channel` with buffer 256). Short cache writes can piggy-back on the same async context; the data volume per turn (summaries + metadata) is small relative to existing JSONL lines.
+- **Prompt size**: To avoid bloating prompts, summarise short-cache entries (e.g., last N tasks + pending next steps) before feeding them back to the model.
+- **Concurrency**: Cache updates should be synchronised with the rollout writer to avoid race conditions; e.g., persist cache updates only after `RolloutCmd::AddItems` completes.
+- **User workflows**: Provide opt-in configuration (`[memory.cache] enabled = true`) so early adopters can test without affecting existing users; log cache file paths in the TUI for transparency.
 
 ## Evaluation Matrix
 
