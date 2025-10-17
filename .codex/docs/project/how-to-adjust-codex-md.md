@@ -74,6 +74,7 @@ Optional: Add a quick reference checklist at the end tailored to your project.
 3. Replace repository structure with `.codex/`, `research/`, and ADR hierarchy.
 4. Insert branch policy and planning rules as per your new workflow.
 5. Double-check checklists include TDD, validation, ADR updates, commit requirements.
-6. Commit and push; update documentation to point future maintainers to this “How to” guide.
+6. Use `codex_template.md` (same directory as this guide) as a starting point for the new repo—update only the sections that need project-specific wording.
+7. Commit and push; update documentation to point future maintainers to this “How to” guide.
 
 Following these steps ensures the `codex.md` in any new repo inherits the best practices developed here without dragging in stale or irrelevant references.
