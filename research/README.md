@@ -3,8 +3,9 @@
 This directory tracks multi-phase investigations into Codex (and related CLI) memory persistence. Each phase produces its own self-contained workspace while preserving earlier findings for reference.
 
 ## Directory Layout
-- `preliminary/` – archive of exploratory notes and cross-tool findings captured before the Codex-focused refinement.
-- `refined-research-<index>/` – codex-centric research phases (`refined-research-1` is the current iteration). Future phases should increment `<index>` (e.g., `refined-research-2`).
+- `preliminary/` — archive of exploratory notes and cross-tool findings captured before the Codex-focused refinement.
+- `refined-research-<index>/` — codex-centric research phases (`refined-research-1` is the current iteration). Future phases should increment `<index>` (e.g., `refined-research-2`). Keep a `pre-ref-<index>.md` bridge document in each folder to summarise context.
+- `research-implementation-plan.md` (at `.codex/docs/project/`) — cross-phase tracker of research progress, sources, and artefacts.
 
 ## Required Structure for Refined Phases
 Each `refined-research-<index>/` directory must contain:
@@ -29,4 +30,4 @@ Each `refined-research-<index>/` directory must contain:
 - Treat `preliminary/` (and older `refined-research-*` directories) as read-only archives unless explicitly updating errata.
 - When citing historical findings, reference the relevant file path (e.g., `preliminary/analysis/claude_code_snapshot.md`).
 
-Following this structure keeps each phase auditable, reduces context loss, and makes it easy to spin up future iterations with minimal overhead.
+Following this structure keeps each phase auditable, reduces context loss, and makes it easy to spin up future iterations with minimal overhead. Update `research-implementation-plan.md` whenever a new phase starts or a major deliverable lands.
