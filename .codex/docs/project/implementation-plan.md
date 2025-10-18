@@ -5,13 +5,14 @@
 > ADR: See `.codex/adr/<task>/<file>.md`
 
 ## Phase 0 – Foundations
-**Objective:** Establish core data contracts and guard rails for the cache layer.
+**Objective:** Establish core data contracts, guard rails, and supporting documentation.
 
-| ID        | Status   | ADR Path                                        | Summary                                                      | Dependencies |
-|-----------|----------|-------------------------------------------------|--------------------------------------------------------------|--------------|
-| TASK-010  | Pending  | `.codex/adr/TASK-010/ADR-010-cache-schema.md`   | Define schema versions, top-level keys, validation rules.    | —            |
-| TASK-020  | Pending  | `.codex/adr/TASK-020/ADR-020-feature-flags.md`  | Introduce `memory.cache.enabled` flag + config defaults.     | TASK-010     |
-| TASK-030  | Pending  | `.codex/adr/TASK-030/ADR-030-cache-manager.md`  | Skeleton cache manager (load/save, backups, migrations).     | TASK-010     |
+| ID        | Status   | ADR Path                                                | Summary                                                      | Dependencies |
+|-----------|----------|---------------------------------------------------------|--------------------------------------------------------------|--------------|
+| TASK-010  | Pending  | `.codex/adr/TASK-010/ADR-010-cache-schema.md`           | Define schema versions, top-level keys, validation rules.    | —            |
+| TASK-020  | Pending  | `.codex/adr/TASK-020/ADR-020-feature-flags.md`          | Introduce `memory.cache.enabled` flag + config defaults.     | TASK-010     |
+| TASK-030  | Pending  | `.codex/adr/TASK-030/ADR-030-cache-manager.md`          | Skeleton cache manager (load/save, backups, migrations).     | TASK-010     |
+| TASK-040  | Complete | `.codex/adr/TASK-040/ADR-040-codex-structure-readmes.md`| Document `.codex/` structure and template bootstrap process. | —            |
 
 ## Phase 1 – Short-Term Cache
 **Objective:** Capture per-turn context and expose recent history to users.
@@ -64,4 +65,4 @@
 - After each task completion:
   1. Finalise ADR (status → `Complete` + outcomes).
   2. Commit with ADR ID reference.
-  3. Push to `master`, then merge into current `refined-research-*` branch.
+  3. Push to `master`, then merge into the active research branch.
