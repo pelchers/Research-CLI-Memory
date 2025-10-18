@@ -1,23 +1,17 @@
 # Implementation Plan (Template)
 
-> Use this table-driven format to track phases, tasks, and ADR references.
+> **Legend**  
+> ✅ Complete 🔄 In Progress ⬜ Pending ⚠️ Blocked  
+> Replace ADR paths with your project’s records.
 
-## Phase 0 – Planning
-| ID        | Status   | ADR Path                         | Summary                         | Dependencies |
-|-----------|----------|----------------------------------|---------------------------------|--------------|
-| TASK-000  | Pending  | `.codex/adr/TASK-000/ADR.md`     | Define project setup checklist. | —            |
+## Phase 0 – Foundations
+| ID        | Status | ADR Path                     | Summary                                   | Dependencies |
+|-----------|--------|------------------------------|-------------------------------------------|--------------|
+| TASK-000  | ⬜      | `<add path>`                 | Define schema/conventions for the project.| —            |
+| TASK-001  | ⬜      | `<add path>`                 | Set up feature flags/config scaffolding.  | TASK-000     |
 
-## Phase 1 – Feature Area Name
-| ID        | Status   | ADR Path                         | Summary                         | Dependencies |
-|-----------|----------|----------------------------------|---------------------------------|--------------|
-| TASK-101  | Pending  | `.codex/adr/TASK-101/ADR.md`     | Describe task scope.            | TASK-000     |
+## Additional Phases
+- Add tables for subsequent phases once research is complete.
+- Keep this file in sync with the research plan and ADR statuses.
 
-## Phase 2 – Feature Area Name
-| ID        | Status   | ADR Path                         | Summary                         | Dependencies |
-|-----------|----------|----------------------------------|---------------------------------|--------------|
-| TASK-201  | Pending  | `.codex/adr/TASK-201/ADR.md`     | Describe task scope.            | TASK-101     |
-
-## Notes
-- Update the tables as work progresses.
-- Ensure every task has a corresponding ADR.
-- Replace placeholder phase titles with real themes or milestones.
+_Note: Leave detailed implementation milestones blank until the research phases in `research-implementation-plan.md` converge on final requirements._

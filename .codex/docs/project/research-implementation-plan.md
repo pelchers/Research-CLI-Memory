@@ -2,29 +2,31 @@
 
 This document tracks the research phases leading up to the deterministic implementation plan.
 
-## Phase R0 â€“ Preliminary Exploration (Completed)
+## Phase R0 – Preliminary Exploration (Status: ? Complete)
 - Scope: Multi-provider comparison (Codex, Claude Code, Gemini).
-- Artifacts: `research/preliminary/analysis/*.md`, `research/preliminary/plan.md`.
+- Artifacts: esearch/preliminary/analysis/*.md, esearch/preliminary/plan.md.
 - Outcome: Identified Codex as the most revealing target for persistent memory enhancements.
 
-## Phase R1 â€“ Refined Codex Research (In Progress)
+## Phase R1 – Refined Codex Research (Status: ?? In Progress)
 - Scope: Deep dive into Codex session persistence gaps and remediation strategies.
-- Folder: `research/refined-research-1/`.
+- Folder: esearch/refined-research-1/.
 - Key deliverables:
-  - `analysis/codex_current_state.md`
-  - `analysis/codex_gap_analysis.md`
-  - `analysis/persistence_recommendations.md`
-  - `analysis/phase1_short_cache_research.md`
-  - `notes/working_notes.md`
-- Current focus: Short-term cache design (Phase 1 tasks).
+  - nalysis/codex_current_state.md (?)
+  - nalysis/codex_gap_analysis.md (?)
+  - nalysis/persistence_recommendations.md (?)
+  - nalysis/phase1_short_cache_research.md (? Phase 1 follow-up work)
+  - 
+otes/working_notes.md (??)
+- Current focus: Short-term cache design (Phase 1 tasks / ADR-110..130).
 
 ## Upcoming Phases
-- **R2 â€“ Long-Term State Research**: Task graph modelling, plan integration, manual edit strategies.
-- **R3 â€“ Drift & Reconciliation Research**: Git divergence handling, user experience design.
-- **R4 â€“ UX & Documentation Research**: Messaging, telemetry, migration narratives.
-- **R5 â€“ Deterministic Implementation Planning**: Finalise PRD/TRD/implementation plan with research findings.
+- **R2 – Long-Term State Research (Status: ? Pending)**: Task graph modelling, plan integration, manual edit strategies. Link future findings in nalysis/ and referenced ADRs (TASK-210..230).
+- **R3 – Drift & Reconciliation Research (Status: ? Pending)**: Git divergence handling, user experience design (TASK-310..330).
+- **R4 – UX & Documentation Research (Status: ? Pending)**: Messaging, telemetry, migration narratives (TASK-410..430).
+- **R5 – Deterministic Implementation Planning (Status: ? Pending)**: Finalise PRD/TRD/implementation plan with research findings.
 
 ## Source Index
-- Codex repo snapshot: `research/refined-research-1/sources/codex/`.
-- Research notes: `research/refined-research-1/notes/working_notes.md`.
-- Evidence logs will be updated per phase as new folders are created.
+- Codex repo snapshot: esearch/refined-research-1/sources/codex/.
+- Research notes: esearch/refined-research-1/notes/working_notes.md.
+- Keep this file and the research phase READMEs updated whenever new artefacts are added.
+
