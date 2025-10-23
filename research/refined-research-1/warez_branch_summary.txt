@@ -1,0 +1,11 @@
+# SchemaPrototype (phase1-schema-prototype)
+
+Results so far:
+- nalysis/phase1_cache_schema_draft.md
+- nalysis/phase1_cache_schema_structs.md
+- 
+otes/working_notes.md (updated)
+
+Next:
+- Expand helper/validation plan.
+- Start drafting tests/serde integration.
