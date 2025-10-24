@@ -1,11 +1,14 @@
 # SchemaPrototype (phase1-schema-prototype)
 
 Results so far:
-- nalysis/phase1_cache_schema_draft.md
-- nalysis/phase1_cache_schema_structs.md
-- 
-otes/working_notes.md (updated)
+- analysis/phase1_cache_schema_draft.md
+- analysis/phase1_cache_schema_structs.md
+- analysis/phase1_cache_validation_tests.md
+- analysis/phase1_cache_hook_plan.md
+- analysis/phase1_cache_manager_blueprint.md
+- notes/working_notes.md (updated)
 
 Next:
-- Expand helper/validation plan.
-- Start drafting tests/serde integration.
+- Prototype validation helpers/tests in sandbox.
+- Prepare fixture samples for schema/short cache.
+
