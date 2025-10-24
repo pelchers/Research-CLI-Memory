@@ -1,3 +1,4 @@
+// Prototype entry point for cache validation experiments.
 fn main() {
-    println!("Cache validation sandbox placeholder. TBD: load fixtures and run validation.");
+    println!(\"Cache validation sandbox ready.\");
 }
