@@ -8,6 +8,7 @@
 - Review mode stores an isolated in-memory history (`review_thread_history`); cache summaries should be emitted when `exit_review_mode` fires.
 - Cache writes must be async and non-blocking; mimic `message_history::append_entry` pattern (spawn blocking I/O).
 - Draft schema examples (long cache + short cache) recorded in `analysis/phase1_cache_schema_draft.md`; structs + validation prototypes captured in `analysis/phase1_cache_schema_structs.md`.
+- Validation sandbox (`sandbox/`) parses sample JSON and runs duplicate/dependency checks; results logged in `analysis/phase1_validation_sandbox_results.md`.
 - Reference: Comparative notes for Claude Code and Gemini CLI archived under `../preliminary` if needed later.
 - Idea: Treat git commits as checkpoints; store deltas between CLI sessions.
 - Investigate: How to detect project milestones automatically from git history.
