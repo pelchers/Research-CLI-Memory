@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "tasks": [
+    { "id": "TASK-001", "title": "Bootstrap", "status": "pending", "dependencies": ["TASK-999"] }
+  ]
+}

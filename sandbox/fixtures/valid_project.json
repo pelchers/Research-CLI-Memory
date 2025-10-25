@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "tasks": [
+    { "id": "TASK-001", "title": "Bootstrap", "status": "pending", "dependencies": [] },
+    { "id": "TASK-002", "title": "Prototype", "status": "in_progress", "dependencies": ["TASK-001"] }
+  ]
+}

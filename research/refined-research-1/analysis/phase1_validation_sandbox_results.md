@@ -1,1 +1,1 @@
-# Phase 1 – Validation Sandbox Results\n\n- [x] Parsed sample project state JSON and validated duplicate/dependency checks.\n- [ ] Add negative tests for dependency failures.\n- [ ] Integrate short cache fixtures.\n
+# Phase 1 – Validation Sandbox Results\n\n- [x] Parsed sample project state JSON and validated duplicate/dependency checks.\n- [x] Added fixtures + tests (cargo test).\n- [ ] Integrate short cache fixtures.\n
