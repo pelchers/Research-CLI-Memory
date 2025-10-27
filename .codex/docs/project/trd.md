@@ -1,44 +1,42 @@
-# Technical Requirements â€“ Codex Memory Persistence Upgrade
+# Technical Requirements – Codex Memory Persistence Upgrade
 
 ## Architecture Overview
-- **Cache Layer**
-  - `project_state.json`: long-term artefact storing roadmap, task graph, git checkpoints, metadata.
-  - `sessions/<timestamp>_<branch>.json`: short-lived per-session summaries.
-- **Integration Points**
-  - Hooks in `Session::spawn_task` / task completion to capture per-turn deltas.
-  - Extension to `update_plan` handler to persist plan steps.
-  - New reconciliation module comparing cached git info to live repo state.
+- **Layered Cache**
+  - Long-term: project_state.json (task graph, milestones, git snapshots, notes).
+  - Short-term: sessions/<timestamp>_<branch>.json (per-turn summaries, approvals, follow-ups).
+- **Core Services**
+  - CacheManager: discovery, load/save, backups, retention policies.
+  - TaskGraphService: CRUD APIs surfaced via CLI (codex tasks ...).
+  - DriftDetector: compares cached git info vs live repo before each turn.
+  - UX Layer: TUI banners + CLI commands showing cache status (Phase 4 research).
 
-## Data Model
-```json
-{
-  "version": 1,
-  "git": { "branch": "main", "head": "abc123", "dirty": false },
-  "tasks": [
-    { "id": "T-001", "title": "Implement cache writer", "status": "in_progress", "evidence": ["commit:abc123"] }
-  ],
-  "milestones": [],
-  "notes": []
-}
-```
-Short cache files reference the same IDs plus timestamps, approvals, and summarized outputs.
+## Data Model Highlights
+- Strongly typed via serde structs (see nalysis/phase1_cache_schema_structs.md).
+- Task nodes map to ADR IDs and store status, dependencies, evidence.
+- Short cache entries log 	urn_id, timestamp, summary, actions, follow-ups.
+- Schema versioning + validation ensures safe migrations (Phase 1 sandbox covers duplicate/dependency checks).
 
-## Module Responsibilities
-- **Cache Manager**: orchestrates loads/saves, conflict resolution, schema migrations.
-- **Task Graph Service**: CRUD operations, CLI command handlers, plan-tool bridge.
-- **Git Drift Checker**: compares cached head/branch vs `collect_git_info`, prompts user.
-- **CLI Command Layer**: `codex cache show`, `codex tasks`, `codex cache reset`.
+## Integration Points
+1. Session::run_task – capture per-turn payloads after ecord_conversation_items.
+2. update_plan handler – sync plan updates into task graph nodes.
+3. Reconciliation module – drift detection before each user turn; exposes CLI flows.
+4. CLI/TUI – codex cache show, codex tasks ..., drift banners.
 
-## Error Handling
-- All write operations must fail gracefully with user-visible warnings; Codex execution continues.
-- Cache corruption detection triggers automatic backup and reset with recovery instructions.
+## Error Handling & Telemetry
+- All writes asynchronous; failures warn and disable cache for session (shadow mode).
+- Backups created before overwriting files; rollback command planned.
+- Telemetry events: cache hit/miss, validation failure, drift type, reconciliation choice.
 
 ## Testing Strategy
-- Unit tests for cache reads/writes, drift detection, plan integration.
-- Integration tests across branch switches, rebases, detached HEAD scenarios.
-- Performance benchmarks to ensure turn latency stays within target.
+- Schema validation sandbox (sandbox/) covers serde parsing + duplicate/dependency checks.
+- Integration tests will script branch switches, rebases, detached HEAD scenarios.
+- Performance benchmarks ensure <20 ms overhead per turn.
 
-## Deployment Considerations
-- Feature flag `memory.cache.enabled` defaults to `false`.
-- Provide migration script reading historical rollouts to seed initial cache.
-- Document manual edit workflows and git conflict resolution steps.
+## Deployment & Rollout
+- Feature flag defaults to disabled (memory.cache.enabled = false).
+- Migration script seeds cache from historical rollouts (Phase 5 research).
+- Documentation updates (PRD/TRD/README) accompany rollout; template bootstrap guide kept in sync.
+
+## References
+- Research docs: nalysis/phase1_*, phase2_*, phase3_*, phase4_*, phase5_*.
+- ADRs TASK-010..530 align with implementation plan.

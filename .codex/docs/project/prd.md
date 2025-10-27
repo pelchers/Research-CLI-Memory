@@ -1,30 +1,50 @@
-# Product Requirements – Codex Memory Persistence Upgrade
+# Product Requirements � Codex Memory Persistence Upgrade
 
 ## Problem Statement
-Developers using Codex lose project momentum because session rollouts and history logs do not surface actionable “what’s next” context. Replaying transcripts or rereading diffs is slow, error-prone, and blind to git branch divergence.
+Codex currently records raw rollouts and a global history.jsonl, yet it lacks a persistent roadmap tying turns to git milestones. Users repeatedly explain context, lose partially completed work, and cannot see drift between cache state and the working tree.
 
-## Objectives
-1. Persist a canonical project roadmap that survives restarts and branch changes.
-2. Provide users with clear visibility into active tasks, pending approvals, and completed milestones.
-3. Detect and communicate git drift before new work begins.
+## Goals
+1. Persist a canonical project/task graph that survives restarts and branch changes.
+2. Surface actionable �next steps� in both CLI and TUI without replaying transcripts.
+3. Detect git drift early and provide safe reconciliation workflows.
+4. Supply documentation/templates so new repos can adopt the conventions quickly.
+
+## Non-Goals
+- Implement multi-agent execution (kept as optional future work).
+- Build remote/cloud storage (local file-based cache only for this phase).
+- Modify Codex execution sandbox or security model.
 
 ## Target Users
-- Engineers working on multi-day or multi-branch repositories with Codex.
-- Researchers evaluating Codex persistence in comparison with other AI CLIs.
-
-## Success Metrics
-- Users can resume a project with actionable “next steps” without rereading prior chats.
-- Git branch changes trigger cache reconciliation prompts in >95% of tested scenarios.
-- Task graph commands (`codex tasks`, `codex plan show`, etc.) return results within 100 ms for repositories up to 5k files.
+- Engineers working on multi-day, multi-branch repositories using Codex CLI.
+- Researchers evaluating Codex persistence vs. other AI CLIs (Claude Code, Gemini).
+- Maintainers who need auditability of Codex sessions for compliance or collaboration.
 
 ## Functional Requirements
-- Read/write `project_state.json` and per-session cache files automatically with minimal user setup.
-- CLI exposes commands to inspect and modify state (show tasks, mark complete, clear).
-- Plan updates issued via `update_plan` or CLI commands sync to the cache.
-- Git drift detection offers options: fork state for new branch, rebase cache, or ignore (with warning).
+- Auto-load project_state.json and per-session cache files when flag enabled.
+- update_plan integration: plan updates mirror into task graph nodes/ADR references.
+- CLI commands: codex cache show, codex tasks show|complete|edit, codex cache reconcile.
+- Drift detection + reconciliation flows (fork/rebase/ignore with warnings).
+- Journal/vector memory hooks (optional modules) reference cache metadata.
 
 ## Non-Functional Requirements
-- File-based storage; no external services.
-- Git-friendly formats (JSON/TOML) to support manual diffing and PR review.
-- Cache writes must not block Codex execution longer than 20 ms per turn on benchmark hardware.
-- Feature must be gated by config flag (`memory.cache.enabled`).
+- File-based storage, git-friendly (JSON/TOML) for diff/PR review.
+- Writes must not block turn loop >20 ms on benchmark hardware.
+- Configurable feature flags (memory.cache.enabled, write_mode).
+- Comprehensive telemetry (cache hit/miss, validation failures, drift events).
+- Migration tooling with backups before overwriting cache files.
+
+## Success Metrics
+- Resume flow: >90% of beta users report they can continue work without rereading prior chats.
+- Drift alerts appear within one turn of branch change; reconciliation actions recorded 100% of the time.
+- CLI/TUI commands respond within 100 ms on repos =5k files.
+- Migration script successfully seeds cache from rollouts in test scenarios (tracked via sandbox cases).
+
+## Risks & Mitigations
+- **Cache corruption** ? versioned schema + backups + validation sandbox.
+- **User confusion** ? UX research (Phase 4) + documentation refresh (overview/TRD).
+- **Performance impact** ? asynchronous writes, retention policies, telemetry monitoring.
+
+## Dependencies
+- Codex git metadata (collect_git_info).
+- Feature flag infrastructure/config loader.
+- ADR/task graph discipline (repo-specific documentation + ADR updates).
